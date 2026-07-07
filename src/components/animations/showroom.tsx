@@ -18,42 +18,38 @@ export default function Showroom() {
   const centerPinRef = useRef<HTMLDivElement>(null); // Reference to kill the ugly line
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-          pin: true,
-        }
-      });
+  // If the refs aren't fully loaded yet, exit safely to prevent premature execution
+  if (!containerRef.current || !leftCasingRef.current || !rightCasingRef.current) return;
 
-      // STAGE 1: Spin the hinge unit
-      tl.to(masterHingeRef.current, {
-        rotateY: 180,
-        ease: "power1.inOut",
-        duration: 1
-      })
-      // STAGE 2: Split leaves, open ambient portal doors, AND hide the center pin line completely
+  // Use gsap.context to scoop up all animations inside our container ref
+  const ctx = gsap.context(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+        pin: true,
+        invalidateOnRefresh: true, // Forces GSAP to recalculate positions on window resize
+      }
+    });
+
+    // Your sequenced actions
+    tl.to(masterHingeRef.current, { rotateY: 180, ease: "power1.inOut", duration: 1 })
       .to(leftDoorRef.current, { rotateY: -90, transformOrigin: "left center", opacity: 0.05, ease: "power2.inOut" }, 1)
       .to(rightDoorRef.current, { rotateY: 90, transformOrigin: "right center", opacity: 0.05, ease: "power2.inOut" }, 1)
       .to(leftCasingRef.current, { x: "-105%", ease: "power2.inOut", duration: 1.5 }, 1)
       .to(rightCasingRef.current, { x: "105%", ease: "power2.inOut", duration: 1.5 }, 1)
-      .to(centerPinRef.current, { opacity: 0, scaleY: 0, ease: "power2.inOut", duration: 0.5 }, 1) // Line completely vanishes here
-      
-      // STAGE 3: Bring forward the full-screen gallery cleanly
-      .fromTo(internalGalleryRef.current, 
-        { opacity: 0, scale: 0.98 }, 
-        { opacity: 1, scale: 1, ease: "power3.out", duration: 1 }, 
-        1.2
-      );
+      .to(centerPinRef.current, { opacity: 0, scaleY: 0, ease: "power2.inOut", duration: 0.5 }, 1)
+      .fromTo(internalGalleryRef.current, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, ease: "power3.out", duration: 1 }, 1.2);
 
-    }, containerRef);
+  }, containerRef); // <-- Binding the context to the container ref is vital
 
-    return () => ctx.revert();
-  }, []);
-
+  // CRITICAL CLEANUP: Revert kills all scroll triggers and resets DOM states before unmounting
+  return () => {
+    ctx.revert(); 
+  };
+}, []);
   return (
     <div ref={containerRef} className="relative h-[220vh] bg-[#1A1A1A]">
       <div className="h-screen w-full flex items-center justify-center overflow-hidden perspective-1000 relative">
