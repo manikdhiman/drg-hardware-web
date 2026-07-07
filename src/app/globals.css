@@ -1,4 +1,29 @@
-/* Enable immersive 3D space modeling for GSAP elements */
+@import "tailwindcss";
+
+@theme {
+  --color-industrial-base: #F4F5F6;
+  --color-industrial-card: #FFFFFF;
+  --color-industrial-dark: #1A1A1A;
+  --color-industrial-accent: #0044FF;
+  
+  --animate-bounce: bounce 1s infinite;
+}
+
+:root {
+  --background: #F4F5F6;
+  --foreground: #1A1A1A;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* 3D Perspective layer for our swivel doors */
 .perspective-1000 {
   perspective: 1200px;
 }
