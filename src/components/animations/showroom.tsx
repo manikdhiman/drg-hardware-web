@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MoveDown, ShieldCheck, Crosshair, Cpu, Maximize2 } from "lucide-react";
+import { MoveDown, ShieldCheck, Crosshair, Wrench, Binary } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,7 +17,7 @@ export default function Showroom() {
   const internalGalleryRef = useRef<HTMLDivElement>(null);
   const centerPinRef = useRef<HTMLDivElement>(null);
   
-  // New Refs for the overlay telemetries
+  // Ref handles for our premium telemetry data clusters
   const telemetryLeftRef = useRef<HTMLDivElement>(null);
   const telemetryRightRef = useRef<HTMLDivElement>(null);
 
@@ -36,28 +36,28 @@ export default function Showroom() {
         }
       });
 
-      // STAGE 1: Spin the hinge unit
+      // STAGE 1: Execute 3D Spin rotation on the master assembly
       tl.to(masterHingeRef.current, {
         rotateY: 180,
         ease: "power1.inOut",
         duration: 1
       })
-      // STAGE 2: Split the casing, rotate ambient doors, and fade out the center line pin
+      // STAGE 2: Split leaves, swivel frame columns outward, and dissolve the central pin line
       .to(leftDoorRef.current, { rotateY: -90, transformOrigin: "left center", opacity: 0.15, ease: "power2.inOut" }, 1)
       .to(rightDoorRef.current, { rotateY: 90, transformOrigin: "right center", opacity: 0.15, ease: "power2.inOut" }, 1)
       .to(leftCasingRef.current, { x: "-105%", ease: "power2.inOut", duration: 1.5 }, 1)
       .to(rightCasingRef.current, { x: "105%", ease: "power2.inOut", duration: 1.5 }, 1)
       .to(centerPinRef.current, { opacity: 0, scaleY: 0, ease: "power2.inOut", duration: 0.5 }, 1)
       
-      // NEW: Slide out the digital measurement labels alongside the leaves to fill the empty space
-      .to(telemetryLeftRef.current, { x: "-60px", opacity: 1, ease: "power2.out" }, 1.1)
-      .to(telemetryRightRef.current, { x: "60px", opacity: 1, ease: "power2.out" }, 1.1)
+      // Slide premium gunmetal labels into the space simultaneously to capture viewer focus
+      .to(telemetryLeftRef.current, { x: "-30px", opacity: 1, ease: "power1.out" }, 1.05)
+      .to(telemetryRightRef.current, { x: "30px", opacity: 1, ease: "power1.out" }, 1.05)
       
-      // STAGE 3: Bring forward the full-screen gallery cleanly
+      // STAGE 3: Bring forward the full-screen gallery early so it fills the screen as the leaves slide wide
       .fromTo(internalGalleryRef.current, 
-        { opacity: 0, scale: 0.98 }, 
-        { opacity: 1, scale: 1, ease: "power3.out", duration: 1 }, 
-        1.2
+        { opacity: 0, scale: 0.97 }, 
+        { opacity: 1, scale: 1, ease: "power2.out", duration: 1.2 }, 
+        1.05 // Fired early to avoid any blank or unfinished screen states
       );
 
     }, containerRef);
@@ -66,113 +66,123 @@ export default function Showroom() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[220vh] bg-[#111622]">
+    <div ref={containerRef} className="relative h-[220vh] bg-[#111317]">
       <div className="h-screen w-full flex items-center justify-center overflow-hidden perspective-1000 relative">
         
-        {/* Technical Structural CAD Blueprint Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,68,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,68,255,0.04)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        {/* PREMIUM METALLIC ARCHITECTURAL GRID (Pure Silver/Gray Directives) */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:50px_50px]" />
         
-        {/* Diagonal Technical Cross-Lines to fill empty negative space */}
-        <div className="absolute w-[150%] h-[1px] bg-white/5 rotate-12 pointer-events-none" />
-        <div className="absolute w-[150%] h-[1px] bg-white/5 -rotate-12 pointer-events-none" />
+        {/* Fine-line laser measurement vectors crossing behind the hardware layout */}
+        <div className="absolute w-[160%] h-[1px] bg-white/5 rotate-[15deg] pointer-events-none" />
+        <div className="absolute w-[160%] h-[1px] bg-white/5 -rotate-[15deg] pointer-events-none" />
 
-        {/* --- DYNAMIC TELEMETRY OVERLAYS (Fills the empty look during mid-scroll) --- */}
-        <div ref={telemetryLeftRef} className="absolute left-[20%] top-[25%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-blue-400/80 bg-blue-950/30 border border-blue-500/20 p-3 backdrop-blur-xs hidden md:block space-y-1">
-          <div className="flex items-center gap-1.5"><Crosshair className="w-3 h-3 text-[#0044FF]" /> <span>SYS_CALIBRATION: ACTIVE</span></div>
-          <p>TOLERANCE: ±0.15mm</p>
-          <p>AXIS_GAP: <span className="text-white font-bold animate-pulse">+520mm</span></p>
+        {/* --- PREMIUM STAINLESS TELEMETRY LABELS (Fills split gap seamlessly) --- */}
+        <div ref={telemetryLeftRef} className="absolute left-[18%] top-[28%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-gray-400 bg-[#1A1D24]/80 border border-white/10 p-4 backdrop-blur-md hidden md:block space-y-1 shadow-2xl rounded-xs">
+          <div className="flex items-center gap-1.5 border-b border-white/5 pb-1 mb-1"><Crosshair className="w-3 h-3 text-gray-300" /> <span className="text-white font-bold">CNC_AXIS_L: LOCKED</span></div>
+          <p>SPEC LIMIT: ±0.15mm COMPLIANT</p>
+          <p>KINETIC CLEARANCE: <span className="text-gray-300 font-bold animate-pulse">TRUE HARDWARE FIT</span></p>
         </div>
 
-        <div ref={telemetryRightRef} className="absolute right-[20%] bottom-[25%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-blue-400/80 bg-blue-950/30 border border-blue-500/20 p-3 backdrop-blur-xs hidden md:block space-y-1">
-          <div className="flex items-center gap-1.5"><Cpu className="w-3 h-3 text-[#0044FF]" /> <span>STRESS_MATRIX: COMPILING</span></div>
-          <p>LOAD_LIMIT: 160KG</p>
-          <p>MATERIAL: SUS316 STEEL</p>
+        <div ref={telemetryRightRef} className="absolute right-[18%] bottom-[28%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-gray-400 bg-[#1A1D24]/80 border border-white/10 p-4 backdrop-blur-md hidden md:block space-y-1 shadow-2xl rounded-xs">
+          <div className="flex items-center gap-1.5 border-b border-white/5 pb-1 mb-1"><Binary className="w-3 h-3 text-gray-300" /> <span className="text-white font-bold">METRIC MATRIX: OK</span></div>
+          <p>MATERIAL BASE: SUS316 STAINLESS</p>
+          <p>LOAD PARAMETER: <span className="text-emerald-400 font-bold">160KG CAPACITY</span></p>
         </div>
 
-        {/* --- FULL SCREEN REVEAL LAYERS --- */}
+        {/* --- IMMERSIVE FULL-SCREEN HARDWARE REVEAL GRID --- */}
         <div 
           ref={internalGalleryRef} 
-          className="absolute inset-0 w-full h-full z-10 opacity-0 bg-gradient-to-b from-[#111827] to-[#0F172A] p-8 lg:p-16 flex flex-col justify-between"
+          className="absolute inset-0 w-full h-full z-10 opacity-0 bg-gradient-to-b from-[#16181D] to-[#0E1013] p-8 lg:p-16 flex flex-col justify-between"
         >
-          <div className="flex justify-between items-center border-b border-white/10 pb-4">
+          {/* Top Status Header */}
+          <div className="flex justify-between items-center border-b border-white/5 pb-4">
             <div>
-              <span className="text-xs font-mono text-[#0044FF] tracking-widest uppercase block font-bold">DRG Manufacturing Blueprint Core</span>
-              <h2 className="text-xl lg:text-3xl font-black text-white tracking-tight mt-0.5">X-Ray Structural Analysis</h2>
+              <span className="text-xs font-mono text-gray-400 tracking-[0.2em] uppercase block font-bold">DRG AUTOMATED PRODUCTION BLUEPRINT</span>
+              <h2 className="text-xl lg:text-3xl font-black text-white tracking-tight mt-0.5">High-Precision Hardware Layout</h2>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-3 py-1">
-              <ShieldCheck className="w-4 h-4" /> PASS // GRADE 4 VALIDATED
+            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-950/30 border border-emerald-900/40 px-3 py-1 rounded-xs font-bold">
+              <ShieldCheck className="w-4 h-4" /> LAB PASS // CE GRADE 4
             </div>
           </div>
 
+          {/* THE SEAMLESS 3-COLUMN INDUSTRIAL IMAGE GRID */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto h-[55vh] max-w-7xl mx-auto w-full pointer-events-auto">
-            <div className="relative h-full bg-slate-900 border border-white/5 rounded-xs overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=800&q=80" alt="Core Micro Bearings" className="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-4 flex flex-col justify-end">
-                <span className="text-[10px] font-mono text-[#0044FF] uppercase font-bold">Section A-A</span>
-                <h4 className="text-sm font-bold text-white mt-0.5">Quad Anti-Friction Bearing Assembly</h4>
+            
+            {/* View 01: Core Micro Bearing Close-Up */}
+            <div className="relative h-full bg-[#1E222B] border border-white/5 rounded-xs overflow-hidden group shadow-lg">
+              <img src="https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=800&q=80" alt="Core Processing Bearings" className="w-full h-full object-cover filter brightness-90 grayscale hover:grayscale-0 hover:brightness-100 transition-all duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E1013] via-[#0E1013]/20 to-transparent p-4 flex flex-col justify-end">
+                <span className="text-[9px] font-mono text-gray-400 uppercase font-bold tracking-widest">Section A-A // Core Link</span>
+                <h4 className="text-sm font-bold text-white mt-0.5 tracking-tight">Quad Anti-Friction Bearing Assembly</h4>
               </div>
             </div>
 
-            <div className="relative h-full bg-slate-900 border border-white/5 rounded-xs overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=800&q=80" alt="CNC Dimension Layout" className="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-4 flex flex-col justify-end">
-                <span className="text-[10px] font-mono text-[#0044FF] uppercase font-bold">Section B-C</span>
-                <h4 className="text-sm font-bold text-white mt-0.5">±0.15mm CNC Machining Blueprint</h4>
+            {/* View 02: CNC Precision Dimension Sheet Layout */}
+            <div className="relative h-full bg-[#1E222B] border border-white/5 rounded-xs overflow-hidden group shadow-lg">
+              <img src="https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=800&q=80" alt="CNC Machining Specs" className="w-full h-full object-cover filter brightness-90 grayscale hover:grayscale-0 hover:brightness-100 transition-all duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E1013] via-[#0E1013]/20 to-transparent p-4 flex flex-col justify-end">
+                <span className="text-[9px] font-mono text-gray-400 uppercase font-bold tracking-widest">Section B-C // Technical</span>
+                <h4 className="text-sm font-bold text-white mt-0.5 tracking-tight">±0.15mm Symmetrical CNC Blueprints</h4>
               </div>
             </div>
 
-            <div className="relative h-full bg-slate-900 border border-white/5 rounded-xs overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=800&q=80" alt="Architectural Application View" className="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-4 flex flex-col justify-end">
-                <span className="text-[10px] font-mono text-[#0044FF] uppercase font-bold">Section D-D</span>
-                <h4 className="text-sm font-bold text-white mt-0.5">Heavy Load On-Site Structural Installation</h4>
+            {/* View 03: Architectural On-Site Structural Installation */}
+            <div className="relative h-full bg-[#1E222B] border border-white/5 rounded-xs overflow-hidden group shadow-lg">
+              <img src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=800&q=80" alt="On Site Architectural Hinge Application" className="w-full h-full object-cover filter brightness-90 grayscale hover:grayscale-0 hover:brightness-100 transition-all duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E1013] via-[#0E1013]/20 to-transparent p-4 flex flex-col justify-end">
+                <span className="text-[9px] font-mono text-gray-400 uppercase font-bold tracking-widest">Section D-D // Installation</span>
+                <h4 className="text-sm font-bold text-white mt-0.5 tracking-tight">Heavy Load Architectural Application</h4>
               </div>
             </div>
+
           </div>
 
-          <div className="flex justify-between items-center text-[10px] font-mono text-gray-500 border-t border-white/10 pt-4">
-            <p>DRG HARDWARE INTERNATIONAL SPECIFICATION ARCHIVE v4.0</p>
-            <p className="text-[#0044FF]">SYSTEM STATUS: ACTIVE</p>
+          {/* Bottom Metatag Track */}
+          <div className="flex justify-between items-center text-[10px] font-mono text-gray-500 border-t border-white/5 pt-4">
+            <p>DRG HARDWARE INTERNATIONAL INDUSTRIAL TESTING DIRECTIVE v4.0</p>
+            <p className="text-gray-400 uppercase font-bold tracking-wider">System Status: Symmetrical Link Match</p>
           </div>
         </div>
 
-        {/* --- FRONT LAYER: HINGE LEAVES & LASER-ETCHED PORTALS --- */}
+        {/* --- FRONT LAYER: PURE STAINLESS METALLIC HINGE LEAVES --- */}
         <div className="relative w-full h-full flex items-center justify-between px-12 z-20 pointer-events-none">
-          {/* Enhanced Side Column with Machined Laser Details */}
-          <div ref={leftDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-neutral-800 to-neutral-900 border border-neutral-700 shadow-2xl items-center justify-center p-2 relative">
-            <div className="absolute inset-2 border border-dashed border-white/5 pointer-events-none" />
-            <span className="font-mono text-[8px] text-white/20 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_L</span>
+          {/* Machine Column Frame Left */}
+          <div ref={leftDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-[#22262F] to-[#16181E] border border-white/5 shadow-2xl items-center justify-center p-2 relative">
+            <div className="absolute inset-1.5 border border-dashed border-white/5 pointer-events-none" />
+            <span className="font-mono text-[8px] text-white/10 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_CHASSIS_L</span>
           </div>
 
+          {/* The Core Master Carrier */}
           <div ref={masterHingeRef} className="w-full md:w-[65%] h-[70vh] relative max-w-4xl bg-transparent flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
             
             <div ref={leftCasingRef} className="absolute top-0 bottom-0 left-0 w-1/2 overflow-hidden border-r border-neutral-900 shadow-2xl bg-white" style={{ backfaceVisibility: "hidden" }}>
-              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80" alt="DRG Leaf L" className="absolute top-0 left-0 h-full w-[200%] object-cover max-w-none" />
+              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80" alt="DRG Leaf L" className="absolute top-0 left-0 h-full w-[200%] object-cover max-w-none filter contrast-105 brightness-95" />
               <div className="absolute top-6 left-6 text-[#1A1A1A] font-mono text-[9px] tracking-widest font-bold border border-black/15 px-2 py-0.5 bg-white/80">
-                DRG // AXIS_L
+                DRG // AXIS_PLATE_L
               </div>
             </div>
 
             <div ref={rightCasingRef} className="absolute top-0 bottom-0 right-0 w-1/2 overflow-hidden border-l border-neutral-900 shadow-2xl bg-white" style={{ backfaceVisibility: "hidden" }}>
-              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80" alt="DRG Leaf R" className="absolute top-0 right-0 h-full w-[200%] object-cover max-w-none" style={{ right: 0 }} />
+              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80" alt="DRG Leaf R" className="absolute top-0 right-0 h-full w-[200%] object-cover max-w-none filter contrast-105 brightness-95" style={{ right: 0 }} />
               <div className="absolute bottom-6 right-6 text-[#1A1A1A] font-mono text-[9px] tracking-widest font-bold border border-black/15 px-2 py-0.5 bg-white/80">
-                DRG // AXIS_R
+                DRG // AXIS_PLATE_R
               </div>
             </div>
 
             <div ref={centerPinRef} className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-2 bg-gradient-to-r from-neutral-600 via-neutral-300 to-neutral-800 z-30 shadow-xl origin-center" />
           </div>
 
-          {/* Enhanced Right Column with Machined Laser Details */}
-          <div ref={rightDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-neutral-800 to-neutral-900 border border-neutral-700 shadow-2xl items-center justify-center p-2 relative">
-            <div className="absolute inset-2 border border-dashed border-white/5 pointer-events-none" />
-            <span className="font-mono text-[8px] text-white/20 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_R</span>
+          {/* Machine Column Frame Right */}
+          <div ref={rightDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-[#22262F] to-[#16181E] border border-white/5 shadow-2xl items-center justify-center p-2 relative">
+            <div className="absolute inset-1.5 border border-dashed border-white/5 pointer-events-none" />
+            <span className="font-mono text-[8px] text-white/10 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_CHASSIS_R</span>
           </div>
         </div>
 
-        <div className="absolute bottom-8 flex flex-col items-center gap-1 font-mono text-[9px] text-gray-400 tracking-[0.25em] z-40 bg-neutral-900/80 px-4 py-2 border border-white/5 rounded-full">
-          <MoveDown className="w-3.5 h-3.5 text-[#0044FF] animate-bounce" />
-          <span>SCROLL: ENGAGING 3D ROTATION & EXPANSION REVEAL</span>
+        {/* Interactive Scroll Banner Tracking Descriptor */}
+        <div className="absolute bottom-8 flex flex-col items-center gap-1 font-mono text-[9px] text-gray-400 tracking-[0.25em] z-40 bg-[#16181D]/90 px-4 py-2 border border-white/5 rounded-full">
+          <MoveDown className="w-3.5 h-3.5 text-gray-300 animate-bounce" />
+          <span>SCROLL: SEPARATING LEAVES // KINETIC MATRIX ACTIVATED</span>
         </div>
       </div>
     </div>
