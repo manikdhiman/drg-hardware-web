@@ -2,164 +2,161 @@
 
 import { useState } from "react";
 import Navbar from "@/components/shared/navbar";
-import { Shield, Download, Settings, Orbit, Eye, ChevronRight } from "lucide-react";
+import { Shield, Download, Settings, Sliders, Eye, RefreshCw } from "lucide-react";
 
-const hingeCatalog = [
+const innovativeHingeCatalog = [
   {
-    id: "DRG-H316-BB",
+    id: "DRG-316-BUTT",
     name: "Heavy Duty Ball Bearing Butt Hinge",
-    material: "Grade 316 Stainless Steel (Marine Grade)",
+    material: "Grade 316 Marine Stainless Steel",
     capacity: "160 kg per Pair",
-    finish: "Satin Brushed Chromium Silver",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-    // --- SPECIAL MECHANICAL HINGE FEATURES ---
-    mechanism: "Quad Ball Bearing System",
-    pinType: "Non-Rising Stainless Pin with Tamper-Proof Security Stud",
-    cycleTest: "1,500,000 Cycles Verified",
-    clearance: "0.25mm Tolerance Margin",
-    knuckleDiameter: "14.0 mm"
+    finish: "Satin Brushed Architectural Silver",
+    // Two distinct image layers to mimic the mechanical transformation
+    exteriorPic: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80", 
+    blueprintPic: "https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=600&q=80",
+    mechanism: "Quad Anti-Friction Bearing Unit",
+    pinType: "Non-Rising Fixed Security Pin",
+    cycleTest: "1,500,000 Open/Close Cycles Verified"
   },
   {
-    id: "DRG-AC3D-80",
-    name: "Concealed 3D Adjustable Architectural Hinge",
-    material: "High-Tensile Zinc Alloy & Reinforced Steel Core",
+    id: "DRG-CONC-3D",
+    name: "Concealed 180° Flush Architectural Hinge",
+    material: "High-Tensile Zinc Structural Alloy",
     capacity: "120 kg per Pair",
-    finish: "Anodized Matte Silver Plated",
-    image: "https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=600&q=80",
-    // --- SPECIAL MECHANICAL HINGE FEATURES ---
-    mechanism: "Fluid 3D Dynamic Pivot Joint",
-    pinType: "Internal Retractable Axis Pin",
-    cycleTest: "800,000 Cycles Verified",
-    clearance: "Zero-Gap Concealment Flush Fit",
-    knuckleDiameter: "N/A (Invisible Axis)"
-  },
-  {
-    id: "DRG-SLC-200",
-    name: "Industrial Spring-Loaded Self-Closing Hinge",
-    material: "Tempered Carbon Steel & High-Tension Alloys",
-    capacity: "200 kg per Pair",
-    finish: "Electro-Galvanized Anti-Corrosion Silver",
-    image: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80",
-    // --- SPECIAL MECHANICAL HINGE FEATURES ---
-    mechanism: "Adjustable Torsion Spring Tension Core",
-    pinType: "Removable Hardened Steel Pivot Pin",
-    cycleTest: "2,000,000 Cycles Verified",
-    clearance: "0.40mm Industrial Tolerance",
-    knuckleDiameter: "18.5 mm"
+    finish: "Anodized Matte Silver Coating",
+    exteriorPic: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80",
+    blueprintPic: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=600&q=80",
+    mechanism: "Fluid 3D Structural Axis Pivot",
+    pinType: "Internal Invisible Floating Mandrel",
+    cycleTest: "1,000,000 Cycles Verified"
   }
 ];
 
 export default function ProductsPage() {
-  const [activeSpec, setActiveSpec] = useState<string | null>(null);
+  const [swiveledHinges, setSwiveledHinges] = useState<{ [key: string]: boolean }>({});
+
+  const toggleHingeLeaf = (id: string) => {
+    setSwiveledHinges((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   return (
     <main className="min-h-screen bg-industrial-base pt-32 pb-24">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6">
         
-        {/* Dynamic Industrial Section Header */}
-        <div className="border-b border-gray-300 pb-8 mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-industrial-accent font-bold flex items-center gap-1.5">
-              <Settings className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} /> Factory Specification Blueprint Matrix
-            </span>
-            <h1 className="text-4xl md:text-5xl font-sans font-bold text-industrial-dark mt-2">Hinge Product Catalog</h1>
-          </div>
-          <p className="text-sm text-gray-650 max-w-sm font-sans font-light leading-relaxed">
-            All DRG hinges undergo structural validation testing to meet strict international standards for load limits and operations.
+        {/* Dynamic Section Header */}
+        <div className="border-b border-gray-300 pb-8 mb-16">
+          <span className="text-xs font-mono uppercase tracking-widest text-industrial-accent font-bold flex items-center gap-1.5">
+            <Sliders className="w-3.5 h-3.5 animate-pulse" /> Kinetic Architecture Matrix
+          </span>
+          <h1 className="text-4xl md:text-5xl font-sans font-bold text-industrial-dark mt-2">
+            Interactive Hinge Catalog
+          </h1>
+          <p className="text-sm text-gray-500 max-w-xl font-sans font-light mt-2">
+            Click "Engage Hinge Leaf Mechanism" to visually swing open the outer product casting and evaluate the raw blueprint and internal specifications underneath.
           </p>
         </div>
 
-        {/* Dynamic Content Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {hingeCatalog.map((hinge) => (
-            <div 
-              key={hinge.id} 
-              className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden flex flex-col justify-between relative group hover:border-industrial-accent transition-all duration-300"
-            >
-              {/* Product Visual Area */}
-              <div className="h-60 bg-gray-100 relative overflow-hidden border-b border-gray-100">
-                <img 
-                  src={hinge.image} 
-                  alt={hinge.name}
-                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
-                />
-                
-                {/* Part Number Tag Overlay */}
-                <div className="absolute top-4 left-4 bg-industrial-dark text-white font-mono text-[10px] px-2.5 py-1 uppercase tracking-widest rounded-xs">
-                  SKU: {hinge.id}
-                </div>
-              </div>
+        {/* Catalog Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {innovativeHingeCatalog.map((hinge) => {
+            const isOpened = swiveledHinges[hinge.id] || false;
 
-              {/* Standard Attributes Panel */}
-              <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-industrial-dark leading-tight">
-                    {hinge.name}
-                  </h3>
+            return (
+              <div 
+                key={hinge.id} 
+                className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden p-6 flex flex-col justify-between space-y-6 hover:border-industrial-accent transition-colors duration-300"
+              >
+                {/* --- THE KINETIC SPLIT HINGE IMAGE FRAME --- */}
+                <div className="h-72 bg-[#E5E7EB] relative overflow-hidden rounded-sm perspective-1000 border border-gray-200">
                   
-                  {/* Basic Specifications Table Wrapper */}
-                  <div className="pt-2 space-y-1.5 text-xs font-sans text-gray-600">
-                    <p><strong className="text-industrial-dark font-medium">Material:</strong> {hinge.material}</p>
-                    <p><strong className="text-industrial-dark font-medium">Load Limit:</strong> {hinge.capacity}</p>
-                    <p><strong className="text-industrial-dark font-medium">Surface Finish:</strong> {hinge.finish}</p>
-                  </div>
-                </div>
-
-                {/* --- KINETIC DROPDOWN ACCORDION MECHANISM FOR FACTORY BLUEPRINTS --- */}
-                <div className="pt-2">
-                  <button 
-                    onClick={() => setActiveSpec(activeSpec === hinge.id ? null : hinge.id)}
-                    className="w-full py-2 px-3 bg-[#F8F9FA] hover:bg-gray-100 border border-gray-200 flex items-center justify-between text-xs font-mono font-medium text-industrial-dark transition-all rounded-xs"
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <Orbit className="w-3.5 h-3.5 text-industrial-accent animate-pulse" /> 
-                      {activeSpec === hinge.id ? "Conceal Blueprint Data" : "Expand Mechanical Specs"}
-                    </span>
-                    <ChevronRight className={`w-3.5 h-3.5 transform transition-transform duration-300 ${activeSpec === hinge.id ? "rotate-90" : ""}`} />
-                  </button>
-
-                  {/* Dynamic Height Structural Feature Drawer */}
-                  <div className={`transition-all duration-300 overflow-hidden ${activeSpec === hinge.id ? "max-h-60 opacity-100 pt-4" : "max-h-0 opacity-0"}`}>
-                    <div className="bg-[#FAFBFB] p-4 border border-dashed border-gray-200 text-[11px] font-mono space-y-2 rounded-xs text-gray-750">
-                      <div className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="text-gray-500">KINETIC CORE:</span>
-                        <span className="text-industrial-dark font-bold text-right">{hinge.mechanism}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="text-gray-500">PIN ARCHITECTURE:</span>
-                        <span className="text-industrial-dark font-bold text-right">{hinge.pinType}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="text-gray-500">STRESS CYCLE TESTS:</span>
-                        <span className="text-emerald-600 font-bold text-right">{hinge.cycleTest}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-1">
-                        <span className="text-gray-500">KNUCKLE DIAMETER:</span>
-                        <span className="text-industrial-dark font-bold text-right">{hinge.knuckleDiameter}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">CNC TOLERANCE:</span>
-                        <span className="text-industrial-accent font-bold text-right">{hinge.clearance}</span>
-                      </div>
+                  {/* LAYER 1: Hidden Internal Factory Blueprint (Always sitting behind) */}
+                  <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-slate-900">
+                    <img 
+                      src={hinge.blueprintPic} 
+                      alt="Mechanical Schematics Blueprint" 
+                      className="w-full h-full object-cover opacity-60 mix-blend-luminosity"
+                    />
+                    <div className="absolute inset-0 bg-blue-900/20" /> {/* Engineering blue overlay tint */}
+                    <div className="absolute top-4 right-4 bg-industrial-accent text-white text-[9px] font-mono px-2 py-0.5 tracking-widest uppercase">
+                      CAD Reference Active
                     </div>
                   </div>
+
+                  {/* LAYER 2: Left Leaf Picture Panel (Swings Left out of view) */}
+                  <div 
+                    className="absolute top-0 left-0 w-1/2 h-full overflow-hidden transition-all duration-700 ease-[0.16,1,0.3,1] border-r border-white/20 z-20"
+                    style={{
+                      transform: isOpened ? "rotateY(-90deg)" : "rotateY(0deg)",
+                      transformOrigin: "left center"
+                    }}
+                  >
+                    <img 
+                      src={hinge.exteriorPic} 
+                      alt={hinge.name} 
+                      className="absolute top-0 left-0 w-[200%] h-full object-cover"
+                    />
+                  </div>
+
+                  {/* LAYER 3: Right Leaf Picture Panel (Swings Right out of view) */}
+                  <div 
+                    className="absolute top-0 right-0 w-1/2 h-full overflow-hidden transition-all duration-700 ease-[0.16,1,0.3,1] border-l border-white/20 z-20"
+                    style={{
+                      transform: isOpened ? "rotateY(90deg)" : "rotateY(0deg)",
+                      transformOrigin: "right center"
+                    }}
+                  >
+                    <img 
+                      src={hinge.exteriorPic} 
+                      alt={hinge.name} 
+                      className="absolute top-0 right-0 w-[200%] h-full object-cover right-0"
+                      style={{ right: 0 }}
+                    />
+                  </div>
+
+                  {/* The Central Hinge Axis Visual Pin Guide */}
+                  <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 bg-gradient-to-r from-gray-400 via-white to-gray-500 shadow-md z-30 pointer-events-none" />
                 </div>
 
-                {/* Footer Certifications Action Row */}
-                <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <button className="flex items-center gap-1.5 text-xs font-mono font-bold text-industrial-accent uppercase tracking-wider hover:text-industrial-dark transition-colors">
-                    <span>Get CAD Layout</span>
-                    <Download className="w-3.5 h-3.5" />
+                {/* Info Text Blocks */}
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start gap-4">
+                    <div>
+                      <span className="text-[10px] font-mono font-bold bg-gray-100 text-industrial-dark px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                        {hinge.id}
+                      </span>
+                      <h3 className="text-xl font-bold text-industrial-dark mt-1.5 leading-tight">{hinge.name}</h3>
+                    </div>
+                  </div>
+
+                  {/* Dynamic Technical Specifications Sheet Overlay */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans border-t border-b border-gray-150 py-4">
+                    <p><span className="text-gray-500 block font-mono text-[10px] uppercase">Material Base</span> <strong className="text-industrial-dark font-medium">{hinge.material}</strong></p>
+                    <p><span className="text-gray-500 block font-mono text-[10px] uppercase">Tested Load Limit</span> <strong className="text-industrial-dark font-medium">{hinge.capacity}</strong></p>
+                    <p><span className="text-gray-500 block font-mono text-[10px] uppercase">Core Kinetic Joint</span> <strong className="text-industrial-dark font-medium">{hinge.mechanism}</strong></p>
+                    <p><span className="text-gray-500 block font-mono text-[10px] uppercase">QA Lab Cycle Count</span> <strong className="text-emerald-600 font-medium">{hinge.cycleTest}</strong></p>
+                  </div>
+                </div>
+
+                {/* Control Action Row */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button 
+                    onClick={() => toggleHingeLeaf(hinge.id)}
+                    className="flex-grow flex items-center justify-center gap-2 py-3 px-4 bg-industrial-dark hover:bg-industrial-accent text-white text-xs font-mono uppercase tracking-widest font-bold transition-all rounded-xs"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isOpened ? "rotate-180" : ""} transition-transform duration-500`} />
+                    <span>{isOpened ? "Close Hardware Casting" : "Engage Hinge Leaf Mechanism"}</span>
                   </button>
-                  <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-sm">
-                    <Shield className="w-3 h-3" /> Grade 4 Validated
-                  </span>
+                  
+                  <button className="flex items-center justify-center gap-1.5 border border-gray-300 hover:border-industrial-dark py-3 px-6 text-xs font-mono text-industrial-dark uppercase tracking-wider transition-colors rounded-xs">
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Get CAD Layout</span>
+                  </button>
                 </div>
-              </div>
 
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
       </div>
