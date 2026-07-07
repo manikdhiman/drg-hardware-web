@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MoveDown, ShieldCheck, Settings } from "lucide-react";
+import { MoveDown, ShieldCheck, Crosshair, Cpu, Maximize2 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,47 +15,79 @@ export default function Showroom() {
   const leftCasingRef = useRef<HTMLDivElement>(null);
   const rightCasingRef = useRef<HTMLDivElement>(null);
   const internalGalleryRef = useRef<HTMLDivElement>(null);
-  const centerPinRef = useRef<HTMLDivElement>(null); // Reference to kill the ugly line
+  const centerPinRef = useRef<HTMLDivElement>(null);
+  
+  // New Refs for the overlay telemetries
+  const telemetryLeftRef = useRef<HTMLDivElement>(null);
+  const telemetryRightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-  // If the refs aren't fully loaded yet, exit safely to prevent premature execution
-  if (!containerRef.current || !leftCasingRef.current || !rightCasingRef.current) return;
+    if (!containerRef.current) return;
 
-  // Use gsap.context to scoop up all animations inside our container ref
-  const ctx = gsap.context(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
-        pin: true,
-        invalidateOnRefresh: true, // Forces GSAP to recalculate positions on window resize
-      }
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          pin: true,
+          invalidateOnRefresh: true,
+        }
+      });
 
-    // Your sequenced actions
-    tl.to(masterHingeRef.current, { rotateY: 180, ease: "power1.inOut", duration: 1 })
-      .to(leftDoorRef.current, { rotateY: -90, transformOrigin: "left center", opacity: 0.05, ease: "power2.inOut" }, 1)
-      .to(rightDoorRef.current, { rotateY: 90, transformOrigin: "right center", opacity: 0.05, ease: "power2.inOut" }, 1)
+      // STAGE 1: Spin the hinge unit
+      tl.to(masterHingeRef.current, {
+        rotateY: 180,
+        ease: "power1.inOut",
+        duration: 1
+      })
+      // STAGE 2: Split the casing, rotate ambient doors, and fade out the center line pin
+      .to(leftDoorRef.current, { rotateY: -90, transformOrigin: "left center", opacity: 0.15, ease: "power2.inOut" }, 1)
+      .to(rightDoorRef.current, { rotateY: 90, transformOrigin: "right center", opacity: 0.15, ease: "power2.inOut" }, 1)
       .to(leftCasingRef.current, { x: "-105%", ease: "power2.inOut", duration: 1.5 }, 1)
       .to(rightCasingRef.current, { x: "105%", ease: "power2.inOut", duration: 1.5 }, 1)
       .to(centerPinRef.current, { opacity: 0, scaleY: 0, ease: "power2.inOut", duration: 0.5 }, 1)
-      .fromTo(internalGalleryRef.current, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, ease: "power3.out", duration: 1 }, 1.2);
+      
+      // NEW: Slide out the digital measurement labels alongside the leaves to fill the empty space
+      .to(telemetryLeftRef.current, { x: "-60px", opacity: 1, ease: "power2.out" }, 1.1)
+      .to(telemetryRightRef.current, { x: "60px", opacity: 1, ease: "power2.out" }, 1.1)
+      
+      // STAGE 3: Bring forward the full-screen gallery cleanly
+      .fromTo(internalGalleryRef.current, 
+        { opacity: 0, scale: 0.98 }, 
+        { opacity: 1, scale: 1, ease: "power3.out", duration: 1 }, 
+        1.2
+      );
 
-  }, containerRef); // <-- Binding the context to the container ref is vital
+    }, containerRef);
 
-  // CRITICAL CLEANUP: Revert kills all scroll triggers and resets DOM states before unmounting
-  return () => {
-    ctx.revert(); 
-  };
-}, []);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div ref={containerRef} className="relative h-[220vh] bg-[#1A1A1A]">
+    <div ref={containerRef} className="relative h-[220vh] bg-[#111622]">
       <div className="h-screen w-full flex items-center justify-center overflow-hidden perspective-1000 relative">
         
-        {/* Technical Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        {/* Technical Structural CAD Blueprint Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,68,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,68,255,0.04)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        
+        {/* Diagonal Technical Cross-Lines to fill empty negative space */}
+        <div className="absolute w-[150%] h-[1px] bg-white/5 rotate-12 pointer-events-none" />
+        <div className="absolute w-[150%] h-[1px] bg-white/5 -rotate-12 pointer-events-none" />
+
+        {/* --- DYNAMIC TELEMETRY OVERLAYS (Fills the empty look during mid-scroll) --- */}
+        <div ref={telemetryLeftRef} className="absolute left-[20%] top-[25%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-blue-400/80 bg-blue-950/30 border border-blue-500/20 p-3 backdrop-blur-xs hidden md:block space-y-1">
+          <div className="flex items-center gap-1.5"><Crosshair className="w-3 h-3 text-[#0044FF]" /> <span>SYS_CALIBRATION: ACTIVE</span></div>
+          <p>TOLERANCE: ±0.15mm</p>
+          <p>AXIS_GAP: <span className="text-white font-bold animate-pulse">+520mm</span></p>
+        </div>
+
+        <div ref={telemetryRightRef} className="absolute right-[20%] bottom-[25%] opacity-0 z-20 pointer-events-none font-mono text-[10px] text-blue-400/80 bg-blue-950/30 border border-blue-500/20 p-3 backdrop-blur-xs hidden md:block space-y-1">
+          <div className="flex items-center gap-1.5"><Cpu className="w-3 h-3 text-[#0044FF]" /> <span>STRESS_MATRIX: COMPILING</span></div>
+          <p>LOAD_LIMIT: 160KG</p>
+          <p>MATERIAL: SUS316 STEEL</p>
+        </div>
 
         {/* --- FULL SCREEN REVEAL LAYERS --- */}
         <div 
@@ -104,9 +136,13 @@ export default function Showroom() {
           </div>
         </div>
 
-        {/* --- FRONT LAYER: HINGE LEAVES --- */}
+        {/* --- FRONT LAYER: HINGE LEAVES & LASER-ETCHED PORTALS --- */}
         <div className="relative w-full h-full flex items-center justify-between px-12 z-20 pointer-events-none">
-          <div ref={leftDoorRef} className="hidden md:block w-[12%] h-[65vh] bg-neutral-800 border-r border-neutral-700 shadow-2xl" />
+          {/* Enhanced Side Column with Machined Laser Details */}
+          <div ref={leftDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-neutral-800 to-neutral-900 border border-neutral-700 shadow-2xl items-center justify-center p-2 relative">
+            <div className="absolute inset-2 border border-dashed border-white/5 pointer-events-none" />
+            <span className="font-mono text-[8px] text-white/20 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_L</span>
+          </div>
 
           <div ref={masterHingeRef} className="w-full md:w-[65%] h-[70vh] relative max-w-4xl bg-transparent flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
             
@@ -124,11 +160,14 @@ export default function Showroom() {
               </div>
             </div>
 
-            {/* The Central Hinge Pin Axis - Linked to fade out completely on split */}
             <div ref={centerPinRef} className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-2 bg-gradient-to-r from-neutral-600 via-neutral-300 to-neutral-800 z-30 shadow-xl origin-center" />
           </div>
 
-          <div ref={rightDoorRef} className="hidden md:block w-[12%] h-[65vh] bg-neutral-800 border-l border-neutral-700 shadow-2xl" />
+          {/* Enhanced Right Column with Machined Laser Details */}
+          <div ref={rightDoorRef} className="hidden md:flex w-[12%] h-[65vh] bg-gradient-to-b from-neutral-800 to-neutral-900 border border-neutral-700 shadow-2xl items-center justify-center p-2 relative">
+            <div className="absolute inset-2 border border-dashed border-white/5 pointer-events-none" />
+            <span className="font-mono text-[8px] text-white/20 uppercase tracking-widest [writing-mode:vertical-lr]">DRG_FRAME_R</span>
+          </div>
         </div>
 
         <div className="absolute bottom-8 flex flex-col items-center gap-1 font-mono text-[9px] text-gray-400 tracking-[0.25em] z-40 bg-neutral-900/80 px-4 py-2 border border-white/5 rounded-full">

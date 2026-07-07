@@ -23,11 +23,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    <html 
+      lang="en" 
+      className={`${geistSans.variable} ${geistMono.variable} antialiased bg-industrial-base text-industrial-dark`}
+      suppressHydrationWarning // <-- THIS FIXES THE EXTENSION COUPLING CRASH
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="relative min-h-screen flex flex-col">
+        {/* Global Structural Wrapper */}
+        <div className="relative min-h-screen flex flex-col">
+          <main className="flex-grow">
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   );
 }
+
